@@ -1,0 +1,39 @@
+{
+  "name": "itsawin-shell",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Win-Win artwork as a viewer for persistent Herdr terminals",
+  "bin": {
+    "win": "bin/win.mjs"
+  },
+  "scripts": {
+    "postinstall": "node setup/prepare-pty.mjs",
+    "start": "node bin/win.mjs",
+    "demo": "node bin/win.mjs --demo",
+    "test": "node --test test/*.test.mjs",
+    "artwork": "node setup/fetch-artwork.mjs",
+    "format": "prettier --write \"src/**/*.mjs\" \"bin/*.mjs\" \"setup/*.mjs\" \"test/**/*.mjs\" \"*.json\" \"*.md\"",
+    "format:check": "prettier --check \"src/**/*.mjs\" \"bin/*.mjs\" \"setup/*.mjs\" \"test/**/*.mjs\" \"*.json\" \"*.md\"",
+    "test:setup": "python3 -m unittest discover -s test -p \"test_*.py\""
+  },
+  "dependencies": {
+    "@xterm/headless": "6.0.0",
+    "node-pty": "1.1.0"
+  },
+  "allowScripts": {
+    "node-pty@1.1.0": true
+  },
+  "devDependencies": {
+    "prettier": "3.10.1"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "author": "Ian Rogers",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fistfulayen/itsawin.git"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,24 @@
+Required Notice: Copyright 2026 Ian Rogers. WIN integration code is licensed under PolyForm Noncommercial 1.0.0.
+
+This license covers the original integration code and documentation in this
+repository. It does not relicense third-party software or artwork.
+
+Win-Win (2024–26) is artwork by Andreas Gysin / ertdfgcvb.
+https://itsa.win/
+The upstream tty.mjs header states: "All rights reserved."
+Neither tty.mjs nor generated artwork clients are distributed in this repository.
+Users obtain the original from the author's site; its original notices remain
+intact in locally generated clients. No affiliation or endorsement is implied.
+
+Herdr is a separate project: https://github.com/herdrdev/herdr-app
+The optional menu installer clones the user's installed mods and applies small
+local edits. This repository does not bundle Herdr's menu or installer source.
+
+Runtime dependencies keep their own licenses:
+- @xterm/headless: MIT (https://github.com/xtermjs/xterm.js)
+- node-pty: MIT (https://github.com/microsoft/node-pty)
+- node-addon-api (transitive): MIT (https://github.com/nodejs/node-addon-api)
+Dependency packages include their license texts; they are not vendored here.
+
+LICENSE is the unmodified PolyForm Noncommercial 1.0.0 text from:
+https://github.com/polyformproject/polyform-licenses/blob/1.0.0/PolyForm-Noncommercial-1.0.0.md
