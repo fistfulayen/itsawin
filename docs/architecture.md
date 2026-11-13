@@ -23,6 +23,7 @@ flowchart LR
 | `src/herdr.mjs` | JSON CLI requests, address validation, directory validation |
 | `src/session.mjs` | PTY attachment, VT emulation, backpressure, cell conversion |
 | `src/input.mjs` | Streaming escape, mouse, and bracketed-paste parsing |
+| `src/sidebar-agents.mjs` | Project WIN-owned terminals into Herdr sidebar rows targeting viewer panes |
 | `src/agents.mjs` | Resume agents with stable core names and separate argv arguments |
 | `bin/win_launch.py` | Shared Claude/Codex Herdr tab and space request builder |
 | `setup/` | Opt-in host launchers, core settings, remote install, and menu patching |
@@ -76,3 +77,20 @@ review changed internals, revise hooks, and run full PTY/visual checks first.
 The upstream artwork and locally cloned Herdr UI are not covered by this project's
 license. The public repo contains integration code and small compatibility anchors,
 not complete copies of those programs.
+
+## Sidebar integration
+
+`itsawin.viewer` stores the host-local core address of the outer viewer.
+`itsawin.agent` identifies agents created by the resume launcher. These labels
+are distinct from `herdr.space`/`herdr.tab`: they do not adopt inner terminals
+as native panes or establish a process parent. Interactive attach updates the
+viewer association; observers leave it alone. Association failures leave the
+terminal usable and mark the window title so they are visible.
+
+The optional installer clones the shipped Agents mod and inserts a pure projection
+function. That function reads all core terminals, app panes, and spaces, adds
+only eligible live inner agents, and assigns each row its viewer's pane ID.
+Native rows are preserved and deduplicated. Remote labels are qualified using the
+inner terminal's machine, never the currently selected space. A legacy fallback
+matches exact resume arguments only when precisely one live viewer matches on
+that host. No source code from the shipped sidebar is bundled in this repository.

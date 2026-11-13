@@ -152,6 +152,15 @@ export function install(api) {
     api.desktop().Fi(win);
     windows.add(win);
     try {
+      // Interactive attachment claims the sidebar's return-to-viewer target.
+      // Observe-only views must not redirect somebody else's agent row.
+      if (!demo && !entry.observe)
+        backend.associate(entry).catch(() => {
+          if (!disposed && win.Ut) {
+            win.title = `${label(entry)} · sidebar link failed`;
+            win.dirty = true;
+          }
+        });
       win.session = new Session(entry, {
         cols: Math.max(1, view.size.x),
         rows: Math.max(1, view.size.y),

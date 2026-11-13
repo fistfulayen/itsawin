@@ -126,6 +126,34 @@ python3 setup/default-shell.py --plain
 Menu patches are checked against the installed source structure and may need an
 update when Herdr changes. The inspected baseline is Herdr app 0.1.15 / hc 0.1.21.
 
+## Agents sidebar
+
+The custom layout includes an Agents sidebar that also lists agents running
+inside WIN. It reads the inner terminal's real core status, while clicking its
+row focuses the outer WIN pane. It does not add a duplicate native terminal pane
+or change the inner process's lifetime.
+
+To update an existing installation, with Herdr open, run:
+
+```sh
+python3 setup/install-herdr-menu.py
+```
+
+Already-running sessions created by the resume launchers can be recognized by
+matching the exact agent type and conversation UUID in the launch arguments on
+the same host. This is read-only and needs no agent restart. If several WIN panes
+match, the sidebar does not guess. New interactive attachments record an explicit
+`itsawin.viewer` label; observe-only attachments do not change it. Ordinary shells
+become sidebar rows when their programs report as agents.
+
+A row with no recognized status report remains unknown rather than being shown
+as idle. Clicking returns to the WIN pane, not a specific internal window when
+that desktop contains several windows. Herdr's built-in agent keyboard cycling
+and aggregate space badges still use its native agent model; this change extends
+the custom sidebar only. A hidden or closed viewer without an app pane has no
+sidebar target. For an older session that cannot be matched, attach to it from a
+new WIN tab to record explicit ownership without restarting the agent.
+
 ## Resume coding agents
 
 From the machine running the Herdr desktop app:

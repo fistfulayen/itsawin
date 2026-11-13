@@ -30,6 +30,17 @@ else if (args[0] === "run") {
   });
   writeFileSync(path, JSON.stringify(data));
   json({ address });
+} else if (args[0] === "label") {
+  const data = load(),
+    terminal = data.terminals.find((t) => t.address === args[1]);
+  if (!terminal) throw new Error("Unknown terminal");
+  terminal.labels ||= {};
+  for (const assignment of args.slice(2)) {
+    const at = assignment.indexOf("=");
+    terminal.labels[assignment.slice(0, at)] = assignment.slice(at + 1);
+  }
+  writeFileSync(path, JSON.stringify(data));
+  json({ ok: true });
 } else if (args[0] === "attach") {
   if (!process.stdin.isTTY) throw new Error("attach requires a PTY");
   process.stdin.setRawMode(true);

@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
-from menu_patch import patch_menu, patch_tabs
+from menu_patch import patch_menu, patch_tabs, patch_agents
 
 root = Path(__file__).resolve().parent.parent
 home = Path(os.environ.get('HERDR_APP_HOME', str(Path.home() / '.config/herdr-app')))
@@ -21,11 +21,16 @@ def clone(kind, name, target):
 try:
     menu = clone('mod', 'new-menu', 'itsawin-menu')
     tabs = clone('mod', 'tabs', 'itsawin-tabs')
-    # Validate both patches before saving either one. Never edit shipped mods.
+    agents = clone('mod', 'agents', 'itsawin-agents')
+    agents_source = patch_agents((agents / 'main.js').read_text())
+    # Validate all patches before saving either one. Never edit shipped mods.
     menu_source = patch_menu((menu / 'main.js').read_text())
     tabs_source = patch_tabs((tabs / 'main.js').read_text())
     (menu / 'main.js').write_text(menu_source)
     (tabs / 'main.js').write_text(tabs_source)
+    (agents / 'main.js').write_text(agents_source)
+    (agents / 'win-agents.js').write_text((root / 'src/sidebar-agents.mjs').read_text())
+    run('check', str(agents))
     run('check', str(menu))
     run('check', str(tabs))
     subprocess.run([sys.executable, str(root / 'setup/install-launcher.py'), '--theme', 'p1', '--host-label', 'Mac'], check=True)
@@ -33,6 +38,8 @@ try:
     data = json.loads(layout.read_text())
     def replace(value):
         if isinstance(value, dict):
+            if value.get('mod') == 'agents':
+                value['mod'] = 'itsawin-agents'
             if value.get('mod') == 'tabs':
                 value['mod'] = 'itsawin-tabs'
             for child in value.values():

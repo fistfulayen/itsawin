@@ -25,3 +25,12 @@ def patch_tabs(source):
         return source
     source = replace_once(source, 'mod: "new-menu"', 'mod: "itsawin-menu"')
     return replace_once(source, 'width: 250, height: 512', 'width: 250, height: 543')
+
+
+def patch_agents(source):
+    """Preserve Herdr's UI; add WIN rows whose pane points at their viewer."""
+    if 'winAgents(agents(), terminals(), panes(), spaces())' in source:
+        return source
+    source = replace_once(source, 'let list = agents();',
+                          'let list = winAgents(agents(), terminals(), panes(), spaces());')
+    return 'import { winAgents } from "./win-agents.js";\n' + source

@@ -71,6 +71,19 @@ test(
     session.resize(72, 22);
     await until("SIZE:72x22");
     session.dispose();
+    const oldOwner = process.env.HC_TERMINAL_ID;
+    process.env.HC_TERMINAL_ID = "tviewer";
+    try {
+      await backend.associate(entry);
+    } finally {
+      if (oldOwner === undefined) delete process.env.HC_TERMINAL_ID;
+      else process.env.HC_TERMINAL_ID = oldOwner;
+    }
+    const state = JSON.parse(
+      await readFile(process.env.WIN_FIXTURE_STATE, "utf8"),
+    );
+    assert.equal(state.terminals[0].labels["itsawin.viewer"], "tviewer");
+    assert.ok(!state.terminals[0].labels["herdr.space"]);
     const after = await backend.list();
     assert.equal(after.terminals[0].address, "t1");
     assert.equal(after.terminals[0].status, "idle");

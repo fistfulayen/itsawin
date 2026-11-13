@@ -70,6 +70,15 @@ export async function resolveDirectory(value, base = process.cwd()) {
   }
   return path;
 }
+// The association is UI metadata, not a parent/lifetime or pane-adoption label.
+export function viewerLabelArgs(own = process.env.HC_TERMINAL_ID) {
+  return typeof own === "string" &&
+    /^[a-zA-Z0-9_.-]+$/.test(own) &&
+    !own.startsWith("-")
+    ? ["--label", `itsawin.viewer=${own}`]
+    : [];
+}
+
 export class Herdr {
   async call(args) {
     try {
@@ -86,6 +95,11 @@ export class Herdr {
       throw new Error(cleanText(message));
     }
   }
+  async associate(entry) {
+    const labels = viewerLabelArgs();
+    if (!labels.length) return;
+    await this.call(["label", terminalAddress(entry.address), labels[1]]);
+  }
   async list() {
     return normalizeList(await this.call(["ls"]));
   }
@@ -98,7 +112,7 @@ export class Herdr {
         "Choose the host in Herdr; WIN creates terminals only on this machine",
       );
     cwd = await resolveDirectory(cwd || process.cwd());
-    args.push("--cwd", cwd);
+    args.push("--cwd", cwd, ...viewerLabelArgs());
     // Explicit program bypasses the core's configured WIN launcher. The constant
     // command resolves the login shell on the target machine, not on the Mac.
     args.push("--", "/bin/sh", "-c", 'exec "${SHELL:-/bin/sh}" -l');

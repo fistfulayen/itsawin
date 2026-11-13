@@ -9,7 +9,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'setup'))
-from menu_patch import patch_menu, patch_tabs
+from menu_patch import patch_menu, patch_tabs, patch_agents
 
 
 class SetupTests(unittest.TestCase):
@@ -58,6 +58,11 @@ class SetupTests(unittest.TestCase):
         patched_tabs = patch_tabs(tabs)
         self.assertIn('itsawin-menu', patched_tabs)
         self.assertEqual(patch_tabs(patched_tabs), patched_tabs)
+        agent_source = patch_agents('let list = agents();')
+        self.assertIn('winAgents(agents(), terminals(), panes(), spaces())', agent_source)
+        self.assertEqual(patch_agents(agent_source), agent_source)
+        with self.assertRaises(ValueError):
+            patch_agents('changed upstream')
         with self.assertRaises(ValueError):
             patch_menu('unknown upstream build')
         with self.assertRaises(ValueError):

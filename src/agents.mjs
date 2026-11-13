@@ -5,7 +5,11 @@ import { access } from "node:fs/promises";
 import { constants } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
-import { resolveDirectory, terminalAddress } from "./herdr.mjs";
+import {
+  resolveDirectory,
+  terminalAddress,
+  viewerLabelArgs,
+} from "./herdr.mjs";
 
 export function sessionId(value) {
   if (
@@ -61,6 +65,9 @@ async function resumeAgent(
     "--bg",
     "--no-parent",
     "--no-notify",
+    ...viewerLabelArgs(),
+    "--label",
+    `itsawin.agent=${agent}`,
     "--name",
     name,
     "--cwd",
